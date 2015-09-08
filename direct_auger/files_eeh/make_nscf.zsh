@@ -19,15 +19,15 @@ done
 
 cd k1
 ${NSCF_SCRIPT}/make_nscf.zsh $PREFIX 1 kgrid_elec_full.dat $SCRATCH
-make_pbs nscf_submit k1_10_direct_nscf 24 00:10:00 debug 'pw.x < nscf.in > nscf.out'
+make_pbs_hopper nscf_submit k1_10_direct_nscf 24 00:10:00 debug 'pw.x < nscf.in > nscf.out'
 cd -
 
 cd k3
 ${NSCF_SCRIPT}/make_nscf.zsh $PREFIX 3 kgrid_hole_irr_halfholegrid.dat $SCRATCH
-make_pbs nscf_submit k3_10_direct_nscf 24 00:10:00 debug 'pw.x < nscf.in > nscf.out'
+make_pbs_hopper nscf_submit k3_10_direct_nscf 24 00:10:00 debug 'pw.x < nscf.in > nscf.out'
 cd -
 
 cd k4
 ${NSCF_SCRIPT}/make_nscf.zsh $PREFIX 4 klist_k4_eeh.dat $SCRATCH
-make_pbs nscf_submit k4_10_direct_nscf 24 00:10:00 debug 'pw.x < nscf.in > nscf.out'
+make_pbs_hopper nscf_submit k4_10_direct_nscf 24 00:10:00 debug 'pw.x < nscf.in > nscf.out'
 cd -

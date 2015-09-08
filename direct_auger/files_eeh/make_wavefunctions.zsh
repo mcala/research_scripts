@@ -17,7 +17,7 @@ for i in 1 3 4; do
 
   # Do unk script and move and submit PBS script
   ./../files/make_unk.tcsh ${PREFIX}
-  make_pbs p2w_submit k${i}_10_direct_wan 24 00:10:00 debug \
+  make_pbs_nersc p2w_submit k${i}_10_direct_wan 24 00:10:00 debug \
     'pw2wannier90.x < pw2wannier90.in > pw2wannier90.out'
   cd -
 done

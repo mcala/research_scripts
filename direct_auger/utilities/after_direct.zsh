@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Moves the long unwieldy post auger names into their own folder with simpler
 # names for plotting.

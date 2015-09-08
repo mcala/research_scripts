@@ -11,6 +11,7 @@ KPOINT_LIST=$3
 SCRATCH=$4
 
 rm -f nscf.in
+rm -rf $KPOINT_LIST
 cat > nscf.in << EOF
 !qe
 &control
