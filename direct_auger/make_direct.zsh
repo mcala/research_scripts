@@ -89,7 +89,7 @@ KPT3HH=`echo ${KPT3} | awk '{print $1/2}'`
 
 # Make directory structure in $HOME and $SCRATCH
 echo "Making files..."
-cp -r ${SCRIPT_DIR}/files_eeh ./files
+cp -r ${SCRIPT_DIR}/files ./files
 mkdir ./pre_direct
 mkdir ${SCRATCH}/files
 mkdir ${SCRATCH}/files/dft_calc
@@ -127,6 +127,10 @@ if [[ -d ${SCRIPT_DIR}/prefix/${PREFIX} ]]; then
     cp ${SCRIPT_DIR}/prefix/make_unk.tcsh ./files/
     echo "No unk.tcsh file in prefix directory!"
     echo "Default unk.tcsh copied. Make sure to modify it!"
+  fi
+
+  if [[ -d copy ]]; then
+    cp copy/* ./files
   fi
 
 else
