@@ -60,6 +60,7 @@ direct_first_run=.false.
 EOF
 
 cp direct.in pre_direct/pre_direct.in
+sed -i -e 's/auger/pre_direct/' pre_direct/pre_direct.in
 
 cat > pre_direct/pre_direct << EOF
 #!/bin/zsh
@@ -67,5 +68,6 @@ cat > pre_direct/pre_direct << EOF
 ~/soft/auger_/bin/efermi_elec.x pre_direct.in > efermi_elec.out
 ~/soft/auger_/bin/efermi_hole.x pre_direct.in > efermi_hole.out
 ~/soft/auger_/bin/trim.x pre_direct.in > trim.out
-~/soft/auger_/bin/generate_k4.x pre_direct.in > gen_kgrid.out
+~/soft/auger_/bin/generate_k4_eeh.x pre_direct.in > gen_kgrid_eeh.out
+~/soft/auger_/bin/generate_k4_hhe.x pre_direct.in > gen_kgrid_hhe.out
 EOF

@@ -1,6 +1,6 @@
 #!/bin/zsh
 #
-# Runs wannier interpolate to get gw eigenvalues instead of DFT+U eigenvalues.
+#
 FILENAME=$1
 
 POINTS=`wc -l $FILENAME | awk '{print $1}'`

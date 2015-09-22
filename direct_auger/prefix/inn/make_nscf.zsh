@@ -1,14 +1,15 @@
 #!/bin/zsh
 
-if [[ $# -ne 4 ]]; then
-  echo "Usage: make_nscf.zsh prefix k# kpoint_list scratch"
+if [[ $# -ne 5 ]]; then
+  echo "Usage: make_nscf.zsh prefix weights(1 or 0) dir_name kpoint_list scratch"
   exit
 fi
 
 PREFIX=$1
 K=$2
-KPOINT_LIST=$3
-SCRATCH=$4
+DIR_NAME=$3
+KPOINT_LIST=$4
+SCRATCH=$5
 
 rm -f nscf.in
 rm -rf $KPOINT_LIST
@@ -21,8 +22,8 @@ cat > nscf.in << EOF
    wf_collect = .true.
    tstress = .false.
    tprnfor = .false.
-   outdir = '${SCRATCH}/k${K}'
-   wfcdir = '${SCRATCH}/k${K}'
+   outdir = '${SCRATCH}/${DIR_NAME}'
+   wfcdir = '${SCRATCH}/${DIR_NAME}'
    pseudo_dir = './'
    verbosity = 'high'
 /
@@ -76,13 +77,13 @@ POINTS=$(($POINTS-1))
 get_pseudos ../files/dft_calc
 
 if [[ -a ${SCRATCH}/files/dft_calc/${PREFIX}.occup ]]; then
-  cp ${SCRATCH}/files/dft_calc/${PREFIX}.occup ${SCRATCH}/k${K}
+  cp ${SCRATCH}/files/dft_calc/${PREFIX}.occup ${SCRATCH}/${DIR_NAME}
 else
   echo "No .occup file! If running DFT+U double check scf run."
 fi
 
-mkdir ${SCRATCH}/k${K}/${PREFIX}.save
-cd ${SCRATCH}/k${K}/${PREFIX}.save
+mkdir ${SCRATCH}/${DIR_NAME}/${PREFIX}.save
+cd ${SCRATCH}/${DIR_NAME}/${PREFIX}.save
 cp ../../files/dft_calc/${PREFIX}.save/charge-density.dat .
 cp ../../files/dft_calc/${PREFIX}.save/data-file.xml .
 cd -
@@ -92,7 +93,7 @@ for i in `seq 1 $POINTS`; do
 done
 
 tail -$POINTS ../pre_direct/${KPOINT_LIST} >> ${KPOINT_LIST}
-if [[ $K -ne 3 ]]; then
+if [[ $K -eq 0 ]]; then
   paste ${KPOINT_LIST} weights_temp >> ${KPOINT_LIST}_2
   mv ${KPOINT_LIST}_2 ${KPOINT_LIST}
 fi
