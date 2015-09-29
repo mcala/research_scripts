@@ -12,8 +12,8 @@ if [[ $SWITCH -eq 1 ]]; then
 
   mv ${SCRATCH}/k1 ${SCRATCH}/k_elec
   rm -r ${SCRATCH}/k2
-  mv k3 ${SCRATCH}/k_irr
-  mv k4 ${SCRATCH}/k4_eeh
+  mv ${SCRATCH}/k3 ${SCRATCH}/k_irr
+  mv ${SCRATCH}/k4 ${SCRATCH}/k4_eeh
 fi
 
 if [[ -d k1 ]]; then

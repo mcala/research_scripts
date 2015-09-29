@@ -129,8 +129,8 @@ if [[ -d ${SCRIPT_DIR}/prefix/${PREFIX} ]]; then
     echo "Default unk.tcsh copied. Make sure to modify it!"
   fi
 
-  if [[ -d copy ]]; then
-    cp copy/* ./files
+  if [[ -d ${SCRIPT_DIR}/prefix/${PREFIX}/copy ]]; then
+    cp ${SCRIPT_DIR}/prefix/${PREFIX}/copy/* ./files
   fi
 
 else
