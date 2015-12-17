@@ -16,25 +16,21 @@ fi
 mkdir ${RUN_NAME}
 mkdir ${RUN_NAME}/run_info
 
-kpoints=`tail -1 files/dft_calc/scf.in | awk '{print $1}'`
-
-
-if [ `ls -l | grep -c eeh` -gt 3 ]; then
-  run="eeh"
-else
-  run="hhe"
-fi
+kpoints=`grep "nkint" direct.in | awk '{print $3}' | rev | cut -c 2- | rev`
 
 echo $run
 mv auger* ${RUN_NAME}
 cp *.out ${RUN_NAME}/run_info
-cp *.dat ${RUN_NAME}/run_info
 cp *.in ${RUN_NAME}/run_info
+cp files/pre_direct/*.dat ${RUN_NAME}/run_info
+cp files/pre_direct/*.in ${RUN_NAME}/run_info
 
 cd ${RUN_NAME}
 
-mkdir plotting
+mkdir plotting_eeh
+mkdir plotting_hhe
 
 for i in `seq 1 8`; do
-  mv auger_coef_${run}_vs_gap_000${i}.dat plotting/${kpoints}_0${i}.dat
+  mv auger_coef_eeh_vs_gap_000${i}.dat plotting_eeh/${kpoints}_0${i}.dat
+  mv auger_coef_hhe_vs_gap_000${i}.dat plotting_hhe/${kpoints}_0${i}.dat
 done
