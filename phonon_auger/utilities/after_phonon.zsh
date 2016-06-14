@@ -15,6 +15,7 @@ fi
 mkdir data/${RUN_NAME}
 mkdir data/${RUN_NAME}/plotting
 mkdir data/${RUN_NAME}/bymode
+mkdir data/${RUN_NAME}/run_info
 
 kpoints=`tail -1 ../nscf_kpt.in | awk '{print $1}'`
 
@@ -24,12 +25,18 @@ mv auger_coef_ep_eeh_absorptionemission000${i}.dat data/${RUN_NAME}
 mv auger_coef_ep_eeh_absorption_000${i}.dat data/${RUN_NAME}
 mv auger_coef_ep_eeh_absorptionemission_bymode000${i}.dat data/${RUN_NAME}
 mv auger_coef_ep_eeh_emission_000${i}.dat data/${RUN_NAME}
+mv auger_coef_ep_hhe_absorptionemission_000${i}.dat data/${RUN_NAME}
+mv auger_coef_ep_hhe_absorption_000${i}.dat data/${RUN_NAME}
+mv auger_coef_ep_hhe_absorptionemission_bymode000${i}.dat data/${RUN_NAME}
+mv auger_coef_ep_hhe_emission_000${i}.dat data/${RUN_NAME}
 
 cp data/${RUN_NAME}/auger_coef_ep_eeh_absorptionemission000${i}.dat data/${RUN_NAME}/plotting/${kpoints}_0${i}.dat
 cp data/${RUN_NAME}/auger_coef_ep_eeh_absorptionemission_bymode000${i}.dat data/${RUN_NAME}/bymode/${kpoints}_0${i}.dat
+cp data/${RUN_NAME}/auger_coef_ep_hhe_absorptionemission_000${i}.dat data/${RUN_NAME}/plotting/${kpoints}_0${i}_hhe.dat
+cp data/${RUN_NAME}/auger_coef_ep_hhe_absorptionemission_bymode000${i}.dat data/${RUN_NAME}/bymode/${kpoints}_0${i}_hhe.dat
 
 done
 
-cp *.in data/${RUN_NAME}
-cp *.out data/${RUN_NAME}
+cp *.in data/${RUN_NAME}/run_info
+cp *.out data/${RUN_NAME}/run_info
 
