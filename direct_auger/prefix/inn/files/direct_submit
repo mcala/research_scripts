@@ -1,0 +1,36 @@
+#!/bin/bash
+
+#PBS -V
+#PBS -M mcala@umich.edu
+#PBS -m ae
+#PBS -j eo
+#PBS -q fluxod
+#PBS -A kioup_fluxod
+#PBS -l qos=flux
+#PBS -N da.80.1E17
+#PBS -l walltime=03:00:00
+#PBS -l nodes=16:ppn=12
+
+#  Include the next three lines always
+if [ "x${PBS_NODEFILE}" != "x" ] ; then
+   cat $PBS_NODEFILE   # contains a list of the CPUs you were using
+fi
+
+cd $PBS_O_WORKDIR
+
+cd ../
+
+/home/mcala/scripts/direct_auger/utilities/make_run.zsh hhe
+
+rm combinations.dat
+
+cp combinations_hhe.dat combinations.dat
+sed -i -e 's/direct_first_run=.true./direct_first_run=.false./g' direct.in
+mpirun -n 48 ~/soft/auger/bin/direct_auger_hhe.x direct.in > direct_hhe.out
+
+rm combinations.dat
+/home/mcala/scripts/direct_auger/utilities/make_run.zsh eeh
+
+cp combinations_eeh.dat combinations.dat
+sed -i -e 's/direct_first_run=.true./direct_first_run=.false./g' direct.in
+mpirun -n 48 ~/soft/auger/bin/direct_auger_eeh.x direct.in > direct_eeh.out

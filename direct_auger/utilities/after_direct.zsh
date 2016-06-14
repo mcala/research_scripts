@@ -24,6 +24,8 @@ cp *.out ${RUN_NAME}/run_info
 cp *.in ${RUN_NAME}/run_info
 cp files/pre_direct/*.dat ${RUN_NAME}/run_info
 cp files/pre_direct/*.in ${RUN_NAME}/run_info
+cp files/pre_direct/*.out ${RUN_NAME}/run_info
+cp -r files/pre_direct/interpolations ${RUN_NAME}/run_info
 
 cd ${RUN_NAME}
 

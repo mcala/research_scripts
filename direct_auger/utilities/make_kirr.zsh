@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 rm -f kirr_coord_weights_halfholegrid.dat
 

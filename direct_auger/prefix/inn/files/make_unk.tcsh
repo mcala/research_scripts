@@ -19,11 +19,15 @@ begin kpoints
 EOF
 
   set NQNSCF = `grep "k( " nscf.out | wc -l`
+  set NQNSCF_over = `grep "k(1" nscf.out | wc -l`
+  set NQNSCF_total = `calc ($NQNSCF[1]+$NQNSCF_over[1])/2`
   set NQNSCF = `calc $NQNSCF[1]/2`
+  set NQNSCF_over = `calc $NQNSCF_over[1]/2`
 #   set NQNSCF = 2
 
-   echo $NQNSCF >> ${prefix}.nnkp
+   echo $NQNSCF_total >> ${prefix}.nnkp
    grep "k( " nscf.out | tail -$NQNSCF | awk '{ print $5,$6,substr($7,1,9)}'   >> ${prefix}.nnkp
+   grep "k(1" nscf.out | tail -$NQNSCF_over | awk '{ print $4,$5,substr($6,1,9)}'   >> ${prefix}.nnkp
  #  echo 0.0 0.0 0.0 >> ${prefix}.nnkp
  #  echo $Q1 $Q2 $Q3 >> ${prefix}.nnkp
 
@@ -39,7 +43,7 @@ begin nnkpts
 EOF
 
 set J = 0
-while ( $J < $NQNSCF )
+while ( $J < $NQNSCF_total )
    set J = `calc $J + 1`
    echo $J $J " 0 0 0 " >> ${prefix}.nnkp
 end
