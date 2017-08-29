@@ -28,64 +28,64 @@ echo "----------------------------------------------------------------"
 
 QPOINTS=`head -2 WFNco.out | tail -1`
 
-	# -----------
-	# Do all q points in one run
-	# -----------
+  # -----------
+  # Do all q points in one run
+  # -----------
 if [[ ${FULL} == 1 ]]; then
-	# -----------
-	# epsilon.inp
-	# -----------
-	# header
-	cat > epsilon.inp <<- EOF
-		epsilon_cutoff ${SCREEN_CUT}
-		number_bands ${TOT_BANDS}
-		band_occupation 8*1 $(($TOT_BANDS-8))*0
+  # -----------
+  # epsilon.inp
+  # -----------
+  # header
+  cat > epsilon.inp <<- EOF
+    epsilon_cutoff ${SCREEN_CUT}
+    number_bands ${TOT_BANDS}
+    band_occupation 8*1 $(($TOT_BANDS-8))*0
 
-		degeneracy_check_override
+    degeneracy_check_override
 
-		number_qpoints ${QPOINTS}
-		begin qpoints
-		0.000000000  0.000000000	0.001000000		1.0  1
-	EOF
+    number_qpoints ${QPOINTS}
+    begin qpoints
+    0.000000000  0.000000000  0.001000000   1.0  1
+  EOF
 
-	# Unshifted q points
-	for q in `seq 2 $QPOINTS`; do
+  # Unshifted q points
+  for q in `seq 2 $QPOINTS`; do
 
-		P1=`head -$((q+2)) WFNco.out | tail -1 | awk '{print $1}'`
-		P2=`head -$((q+2)) WFNco.out | tail -1 | awk '{print $2}'`
-		P3=`head -$((q+2)) WFNco.out | tail -1 | awk '{print $3}'`
+    P1=`head -$((q+2)) WFNco.out | tail -1 | awk '{print $1}'`
+    P2=`head -$((q+2)) WFNco.out | tail -1 | awk '{print $2}'`
+    P3=`head -$((q+2)) WFNco.out | tail -1 | awk '{print $3}'`
 
-		cat >> epsilon.inp <<- EOF
-			$P1  $P2	$P3		1.0  0
-		EOF
+    cat >> epsilon.inp <<- EOF
+      $P1  $P2  $P3   1.0  0
+    EOF
 
-	done
+  done
 
-	# final end
-	cat >> epsilon.inp <<- EOF
-		end
-	EOF
+  # final end
+  cat >> epsilon.inp <<- EOF
+    end
+  EOF
 
-	# -----------
-	# submit
-	# -----------
+  # -----------
+  # submit
+  # -----------
 
-	cat > submit <<- EOF
-		#!/bin/bash -l
-		#PBS -q regular
-		#PBS -N csi_epsilon_${SCREEN_CUT}_${TOT_BANDS}
-		#PBS -l mppwidth=96
-		#PBS -l walltime=00:15:00
-		#PBS -j eo
-		#PBS -A m1380
-		#PBS -m ae
+  cat > submit <<- EOF
+    #!/bin/bash -l
+    #PBS -q regular
+    #PBS -N csi_epsilon_${SCREEN_CUT}_${TOT_BANDS}
+    #PBS -l mppwidth=96
+    #PBS -l walltime=00:15:00
+    #PBS -j eo
+    #PBS -A m1380
+    #PBS -m ae
 
-		cd \${PBS_O_WORKDIR}
-		module load espresso/5.1.1
-		module load berkeleygw
+    cd \${PBS_O_WORKDIR}
+    module load espresso/5.1.1
+    module load berkeleygw
 
-		aprun -n 96 ~/soft/berkeleygw_6442/bin/epsilon.cplx.x > epsilon.out
-	EOF
+    aprun -n 96 ~/soft/berkeleygw_6442/bin/epsilon.cplx.x > epsilon.out
+  EOF
 
 # -----------
 # Separate all q points into directories for merging later
@@ -93,85 +93,85 @@ if [[ ${FULL} == 1 ]]; then
 
 else
 
-	# Have to do shifted point on it's own
-	mkdir 1_qpt
-	cd 1_qpt
+  # Have to do shifted point on it's own
+  mkdir 1_qpt
+  cd 1_qpt
 
-	cat > epsilon.inp <<- EOF
-		epsilon_cutoff ${SCREEN_CUT}
-		number_bands ${TOT_BANDS}
-		band_occupation 8*1 $(($TOT_BANDS-8))*0
+  cat > epsilon.inp <<- EOF
+    epsilon_cutoff ${SCREEN_CUT}
+    number_bands ${TOT_BANDS}
+    band_occupation 8*1 $(($TOT_BANDS-8))*0
 
-		degeneracy_check_override
+    degeneracy_check_override
 
-		number_qpoints 1
-		begin qpoints
-		0.000000000  0.000000000	0.001000000		1.0  1
-		end
-	EOF
+    number_qpoints 1
+    begin qpoints
+    0.000000000  0.000000000  0.001000000   1.0  1
+    end
+  EOF
 
-	cat > submit <<- EOF
-		#!/bin/bash -l
-		#PBS -q regular
-		#PBS -N csi_epsilon_${SCREEN_CUT}_${TOT_BANDS}_1_qpt
-		#PBS -l mppwidth=96
-		#PBS -l walltime=00:15:00
-		#PBS -j eo
-		#PBS -A m1380
-		#PBS -m ae
+  cat > submit <<- EOF
+    #!/bin/bash -l
+    #PBS -q regular
+    #PBS -N csi_epsilon_${SCREEN_CUT}_${TOT_BANDS}_1_qpt
+    #PBS -l mppwidth=96
+    #PBS -l walltime=00:15:00
+    #PBS -j eo
+    #PBS -A m1380
+    #PBS -m ae
 
-		cd \${PBS_O_WORKDIR}
-		module load espresso/5.1.1
-		module load berkeleygw
+    cd \${PBS_O_WORKDIR}
+    module load espresso/5.1.1
+    module load berkeleygw
 
-		aprun -n 96 ~/soft/berkeleygw_6442/bin/epsilon.cplx.x > epsilon.out
-	EOF
+    aprun -n 96 ~/soft/berkeleygw_6442/bin/epsilon.cplx.x > epsilon.out
+  EOF
 
-	cd -
+  cd -
 
-	for q in `seq 2 $QPOINTS`; do
-		mkdir ${q}_qpt
-		cd ${q}_qpt
+  for q in `seq 2 $QPOINTS`; do
+    mkdir ${q}_qpt
+    cd ${q}_qpt
 
-		cat > epsilon.inp <<- EOF
-			epsilon_cutoff ${SCREEN_CUT}
-			number_bands ${TOT_BANDS}
-			band_occupation 8*1 $(($TOT_BANDS-8))*0
+    cat > epsilon.inp <<- EOF
+      epsilon_cutoff ${SCREEN_CUT}
+      number_bands ${TOT_BANDS}
+      band_occupation 8*1 $(($TOT_BANDS-8))*0
 
-			degeneracy_check_override
+      degeneracy_check_override
 
-			number_qpoints 1
-			begin qpoints
-		EOF
+      number_qpoints 1
+      begin qpoints
+    EOF
 
-	P1=`head -$((q+2)) ../WFNco.out | tail -1 | awk '{print $1}'`
-	P2=`head -$((q+2)) ../WFNco.out | tail -1 | awk '{print $2}'`
-	P3=`head -$((q+2)) ../WFNco.out | tail -1 | awk '{print $3}'`
+  P1=`head -$((q+2)) ../WFNco.out | tail -1 | awk '{print $1}'`
+  P2=`head -$((q+2)) ../WFNco.out | tail -1 | awk '{print $2}'`
+  P3=`head -$((q+2)) ../WFNco.out | tail -1 | awk '{print $3}'`
 
-	cat >> epsilon.inp <<- EOF
-		$P1  $P2	$P3		1.0  0
-		end
-	EOF
+  cat >> epsilon.inp <<- EOF
+    $P1  $P2  $P3   1.0  0
+    end
+  EOF
 
-	cat > submit <<- EOF
-		#!/bin/bash -l
-		#PBS -q regular
-		#PBS -N csi_epsilon_${SCREEN_CUT}_${TOT_BANDS}_${q}_qpt
-		#PBS -l mppwidth=96
-		#PBS -l walltime=00:15:00
-		#PBS -j eo
-		#PBS -A m1380
-		#PBS -m ae
+  cat > submit <<- EOF
+    #!/bin/bash -l
+    #PBS -q regular
+    #PBS -N csi_epsilon_${SCREEN_CUT}_${TOT_BANDS}_${q}_qpt
+    #PBS -l mppwidth=96
+    #PBS -l walltime=00:15:00
+    #PBS -j eo
+    #PBS -A m1380
+    #PBS -m ae
 
-		cd \${PBS_O_WORKDIR}
-		module load espresso/5.1.1
-		module load berkeleygw
+    cd \${PBS_O_WORKDIR}
+    module load espresso/5.1.1
+    module load berkeleygw
 
-		aprun -n 96 ~/soft/berkeleygw_6442/bin/epsilon.cplx.x > epsilon.out
-	EOF
+    aprun -n 96 ~/soft/berkeleygw_6442/bin/epsilon.cplx.x > epsilon.out
+  EOF
 
-	cd -
+  cd -
 
-	done
+  done
 
 fi

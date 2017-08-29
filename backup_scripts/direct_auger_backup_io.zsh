@@ -27,6 +27,7 @@ echo "PREFIX is $PREFIX."
 WORKING_DIR=`pwd`
 
 mkdir backup
+$HOME/scripts/direct_auger/utilities/make_run.zsh reset
 
 # Starts in main directory, copies pretty much everything over
 cp *.dat backup
